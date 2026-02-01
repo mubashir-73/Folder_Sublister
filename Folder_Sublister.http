@@ -1,0 +1,6 @@
+@Folder_Sublister_HostAddress = http://localhost:5161
+
+GET {{Folder_Sublister_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
