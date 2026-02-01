@@ -20,7 +20,7 @@ namespace Folder_Sublister.Controllers
             try
             {
                 foreach (var filePath in Directory.EnumerateFiles(
-                               FolderPath, "*", SearchOption.AllDirectories))
+                               FolderPath, "*", SearchOption.TopDirectoryOnly)) //I DirectoryAll makes it list all the files but for now since subfolders are to be ignored I have kept TopDirectory
                 {
                     
                     try
