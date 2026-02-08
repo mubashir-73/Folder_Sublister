@@ -2,37 +2,38 @@
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Reflection.Metadata.Ecma335;
-
+using Folder_Sublister.Models;
 namespace Folder_Sublister.Controllers
 {
+    [ApiController]
     [Route("/api/files")]
     public class FolderController : ControllerBase
     {
         [HttpGet]
-        public IActionResult GetFiles([FromQuery] string FolderPath)
+        public IActionResult GetFiles([FromQuery] string folderPath)
         {
-            if (string.IsNullOrEmpty(FolderPath) || !Directory.Exists(FolderPath))
+            if (!Directory.Exists(folderPath))
             {
                 return BadRequest("Invalid folder path.");
             }
             // For now the files will be skipped if access is denied
-            var results = new List<object>();
+            var results = new List<FileInfoDto>();
             try
             {
                 foreach (var filePath in Directory.EnumerateFiles(
-                               FolderPath, "*", SearchOption.TopDirectoryOnly)) //I DirectoryAll makes it list all the files but for now since subfolders are to be ignored I have kept TopDirectory
+                               folderPath, "*", SearchOption.TopDirectoryOnly)) //I DirectoryAll makes it list all the files but for now since subfolders are to be ignored I have kept TopDirectory
                 {
                     
                     try
                     {
                         var fileInfo = new FileInfo(filePath);
 
-                        results.Add(new
+                        results.Add(new FileInfoDto
                         {
                             FileName = fileInfo.Name,
                             Extension = fileInfo.Extension,
                             FilePath = filePath,
-                            SizeKB = $"{Math.Round(fileInfo.Length / 1024.0, 2)} kb"
+                            SizeKB = Math.Round(fileInfo.Length / 1024.0, 2)
                         });
                     }
                     catch (UnauthorizedAccessException)
